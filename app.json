@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "OFB",
-    "slug": "OFB",
+    "slug": "ofb",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "ofb",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -28,9 +28,19 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "resizeMode": "cover",
+          "backgroundColor": "#6420AA"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts ": [
+            "./assets/fonts/sf-pro-text-regular.ttf",
+            "./assets/fonts/SF-Pro-Text-SemiboldItalic.ttf",
+            "./assets/fonts/sf-pro-text-bold.ttf",
+            "./assets/fonts/sf-pro-text-heavy.ttf"
+          ]
         }
       ]
     ],
