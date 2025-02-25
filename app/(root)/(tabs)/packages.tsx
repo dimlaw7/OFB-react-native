@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const cart = () => {
+const packages = () => {
   return (
     <View>
-      <Text>cart</Text>
+      <Text>packages</Text>
     </View>
   );
 };
 
-export default cart;
+export default packages;

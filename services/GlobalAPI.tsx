@@ -2,13 +2,13 @@ const axios = require("axios").default;
 
 interface LoginData {
   email: string;
-  pass: string;
+  password: string;
 }
 
 const authenticateUser = (data: LoginData) =>
   axios.post("http://192.168.0.102:3000/api/v1/user/login", {
     email: data.email,
-    pass: data.pass,
+    password: data.password,
   });
 
 export default {
