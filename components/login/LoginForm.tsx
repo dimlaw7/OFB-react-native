@@ -55,19 +55,21 @@ const LoginForm = () => {
     <>
       <View style={styles.inputGroup}>
         <View style={styles.inputWrapper}>
-          {!email && <Text style={styles.placeholder}>Email address</Text>}
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
             value={email}
+            placeholder="Email"
+            placeholderTextColor="#6420AAAD"
           />
         </View>
         <View style={styles.inputWrapper}>
-          {!password && <Text style={styles.placeholder}>Password</Text>}
           <TextInput
             style={styles.input}
             onChangeText={setPassword}
             value={password}
+            placeholder="Password"
+            placeholderTextColor="#6420AAAD"
             secureTextEntry
           />
           <Image
