@@ -12,7 +12,7 @@ interface CustomJwtPayload extends JwtPayload {
 }
 
 export default function RootLayout() {
-  const [auth, setAuth] = useState<string>("Hello World");
+  const [user, setUser] = useState<string>("Hello World");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fontsLoaded] = useFonts({
@@ -38,6 +38,7 @@ export default function RootLayout() {
         if (value) {
           const decoded = jwtDecode<CustomJwtPayload>(value);
           setIsLoggedIn(!!decoded.username);
+          setUser(decoded.username);
         }
       } catch (e) {
         console.error("Error retrieving user data:", e);
@@ -53,7 +54,14 @@ export default function RootLayout() {
 
   return (
     <AuthProvider
-      value={{ auth, setAuth, isLoggedIn, isLoading, setIsLoading }}
+      value={{
+        user,
+        setUser,
+        isLoggedIn,
+        isLoading,
+        setIsLoading,
+        setIsLoggedIn,
+      }}
     >
       <Stack screenOptions={{ headerShown: false }} />
     </AuthProvider>
