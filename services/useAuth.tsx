@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 export default function useAuth() {
-  const { setIsLoading } = useAuthContext();
+  const { setIsLoading, setIsLoggedIn } = useAuthContext();
 
   const login = async ({
     email,
@@ -28,6 +28,7 @@ export default function useAuth() {
         throw new Error("Token is missing in the response");
       }
       await AsyncStorage.setItem("token", response.data.payload);
+      setIsLoggedIn(true);
       return true;
     } catch (e) {
       console.log("Error!", e);

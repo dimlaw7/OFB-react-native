@@ -6,11 +6,12 @@ type authProps = {
 };
 
 interface AuthContextType {
-  auth: string;
-  setAuth: (value: string) => void;
+  user: string;
+  setUser: (value: string) => void;
   isLoggedIn: boolean;
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
+  setIsLoggedIn: (value: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
