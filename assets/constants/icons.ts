@@ -10,9 +10,11 @@ import world from "@/assets/icons/world.png";
 import bubbleChat from "@/assets/icons/bubble-chat.png";
 import userGroup from "@/assets/icons/user-group.png";
 import logout from "@/assets/icons/logout.png";
+import star from "@/assets/icons/Star.png";
 
 export default {
   bell,
+  star,
   cameraPlus,
   menuSquare,
   user,
