@@ -21,7 +21,7 @@ const LoginForm = () => {
   const { login } = useAuth();
 
   const isDisabled = !email.trim() || !password.trim();
-  const { auth, isLoggedIn, setAuth, isLoading } = useAuthContext();
+  const { user, isLoggedIn, setUser, isLoading } = useAuthContext();
   const handleLogin = async () => {
     const result = await login({ email, password });
     if (result) setRedirect(true);
