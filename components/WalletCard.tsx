@@ -18,7 +18,7 @@ const getUserBalance = async () => {
   }
   try {
     const response = await axios.post(
-      "http://192.168.0.102:3000/api/v1/user/details",
+      `${process.env.EXPO_PUBLIC_API_URL}/api/v1/user/details`,
       { token }
     );
     if (response.data.status === "error") {
