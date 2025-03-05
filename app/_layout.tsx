@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import AuthProvider from "@/hooks/useContext/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { JwtPayload, jwtDecode } from "jwt-decode";
+import { StatusBar } from "expo-status-bar";
 
 interface CustomJwtPayload extends JwtPayload {
   username: string;
@@ -63,6 +64,7 @@ export default function RootLayout() {
         setIsLoggedIn,
       }}
     >
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }} />
     </AuthProvider>
   );
