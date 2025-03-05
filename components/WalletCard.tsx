@@ -1,12 +1,42 @@
+import { useFetchData } from "@/hooks/useFetchData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import {
-  View,
+  ImageBackground,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
+  View,
 } from "react-native";
 
+const getUserBalance = async () => {
+  const token = await AsyncStorage.getItem("token");
+  if (!token) {
+    throw new Error(
+      "ERR-WALLET-CARD: User token not found. It appears that you are not log in."
+    );
+  }
+  try {
+    const response = await axios.post(
+      "http://192.168.0.102:3000/api/v1/user/details",
+      { token }
+    );
+    if (response.data.status === "error") {
+      throw new Error("ERR-WALLET-CARD: Error Retrieving user balance");
+    }
+    if (!response.data.data) {
+      throw new Error("ERR-WALLET-CARD: Token is missing in the response");
+    }
+    return response.data.data;
+  } catch (err: unknown) {
+    console.log("Error!", err);
+    return null;
+  }
+};
+
 const WalletCard = () => {
+  const { data, error } = useFetchData({ fn: getUserBalance });
+  //console.log(!data ? "Loading data..." : data);
   return (
     <View style={styles.cardContainer}>
       <View style={styles.WalletCard}>
@@ -17,7 +47,9 @@ const WalletCard = () => {
           imageStyle={styles.backgroundImage}
         >
           <Text style={styles.title}>Wallet Balance</Text>
-          <Text style={styles.amount}>₦30,000.00</Text>
+          <Text style={styles.amount}>
+            {!data?.wallet ? "Loading..." : "₦" + data.wallet}
+          </Text>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Deposit</Text>
           </TouchableOpacity>
