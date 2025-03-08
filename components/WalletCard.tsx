@@ -18,7 +18,7 @@ const getUserBalance = async () => {
   }
   try {
     const response = await axios.post(
-      `${process.env.EXPO_PUBLIC_API_URL}/api/v1/user/details`,
+      `http://192.168.0.100:3000/api/v1/user/details`,
       { token }
     );
     if (response.data.status === "error") {
@@ -29,7 +29,18 @@ const getUserBalance = async () => {
     }
     return response.data.data;
   } catch (err: unknown) {
-    console.log("Error!", err);
+    if (err instanceof Error) {
+      if (err.message === "timeout exceeded") {
+        console.log(
+          "Timeout exceeded. Please check your internet connection and try again"
+        );
+        //return {message: "Timeout exceeded. Please check your internet connection and try again"}
+      } else {
+        console.log("Error!", err.message);
+      }
+    } else {
+      console.log("An unknown error occured!");
+    }
     return null;
   }
 };
