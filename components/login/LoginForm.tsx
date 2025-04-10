@@ -3,6 +3,8 @@ import { useAuthContext } from "@/hooks/useContext/AuthProvider";
 import useAuth from "@/services/useAuth";
 import { Link, Redirect } from "expo-router";
 import React, { useState } from "react";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
   Image,
   StyleSheet,
@@ -11,104 +13,96 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-const axios = require("axios").default;
 
 const LoginForm = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  //const [isLoading, setIsLoading] = useState<boolean>(false);
   const [redirect, setRedirect] = useState<boolean>(false);
+
   const { login } = useAuth();
+  const { isLoading } = useAuthContext();
 
   const isDisabled = !email.trim() || !password.trim();
-  const { user, isLoggedIn, setUser, isLoading } = useAuthContext();
+
   const handleLogin = async () => {
+    setErrorMessage(null);
     const result = await login({ email, password });
-    if (result) setRedirect(true);
-    // try {
-    //   setIsLoading(true);
-    //   const response = await axios.post(
-    //     "http://192.168.0.102:3000/api/v1/user/login",
-    //     {
-    //       email: email,
-    //       pass: password,
-    //     }
-    //   );
-    //   if (response.data.status === "error") {
-    //     throw new Error("Login error from server");
-    //   }
-    //   if (!response.data.payload) {
-    //     throw new Error("Token is missing in the response");
-    //   }
-    //   await AsyncStorage.setItem("token", response.data.payload);
-    //   console.log("You are logged In");
-    // } catch (e) {
-    //   console.log("Error!", e);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    if (result === true) {
+      setRedirect(true);
+    } else if (result && result.error) {
+      setErrorMessage(result.error);
+    }
   };
+
   if (redirect) {
     return <Redirect href="/" />;
   }
+
   return (
     <>
       <View style={styles.inputGroup}>
+        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+
         <View style={styles.inputWrapper}>
+          <Feather
+            name="mail"
+            size={22}
+            color="#7D7D7D"
+            style={styles.iconStyle}
+          />
           <TextInput
             style={styles.input}
             onChangeText={setEmail}
             value={email}
             placeholder="Email"
-            placeholderTextColor="#6420AAAD"
+            placeholderTextColor="#7D7D7D"
           />
         </View>
+
         <View style={styles.inputWrapper}>
+          <MaterialIcons
+            name="lock-outline"
+            size={22}
+            color="#7D7D7D"
+            style={styles.iconStyle}
+          />
           <TextInput
             style={styles.input}
             onChangeText={setPassword}
             value={password}
             placeholder="Password"
-            placeholderTextColor="#6420AAAD"
+            placeholderTextColor="#7D7D7D"
             secureTextEntry
           />
-          <Image
-            source={images.eye}
-            style={{ position: "absolute", top: 12, left: 10 }}
-          />
+          <Image source={images.eye} style={styles.eyeIcon} />
         </View>
       </View>
+
       <View style={styles.actionsWrapper}>
-        <Text style={{ color: "#A7A7A7" }}>Remember Me</Text>
-        <Link href="/profile" style={{ color: "#6240AA" }}>
+        <Text style={styles.rememberMeText}>Remember Me</Text>
+        <Link href="/profile" style={styles.forgotPasswordLink}>
           Forgot Password?
         </Link>
       </View>
+
       <View style={styles.buttonWrapper}>
         <TouchableOpacity
           disabled={isDisabled}
           onPress={handleLogin}
           style={[
             styles.buttonLogin,
-            (isDisabled || isLoading) && { backgroundColor: "#B9A7D6" },
+            (isDisabled || isLoading) && styles.disabledButton,
           ]}
         >
           <Text style={styles.buttonText}>
             {!isLoading ? "Log In" : "Logging In..."}
           </Text>
         </TouchableOpacity>
-        <Text
-          style={{
-            fontFamily: "sf-bold",
-            color: "#A7A7A7",
-            textAlign: "center",
-          }}
-        >
+
+        <Text style={styles.registerText}>
           Don't have an account?{" "}
-          <Link
-            href="/profile"
-            style={{ color: "#6240AA", textDecorationLine: "underline" }}
-          >
+          <Link href="/profile" style={styles.registerLink}>
             Register
           </Link>
         </Text>
@@ -118,51 +112,50 @@ const LoginForm = () => {
 };
 
 const styles = StyleSheet.create({
-  inputGroup: { marginTop: 49, gap: 32 },
+  inputGroup: { marginTop: 22, gap: 22 },
   inputWrapper: { position: "relative" },
   input: {
-    backgroundColor: "#f2f2f2", //#f5f1f9
+    borderWidth: 2,
+    borderColor: "#F2F2F2",
     height: 50,
-    paddingLeft: 16, //42,
+    paddingLeft: 40,
     color: "#6420AA",
     fontFamily: "sf-regular",
     borderRadius: 10,
     fontSize: 14,
     alignItems: "center",
   },
-  placeholder: {
-    position: "absolute",
-    left: 16,
-    top: 16,
-    color: "#857F86",
-    fontWeight: "bold",
-    zIndex: 1,
-  },
-  buttonWrapper: { marginTop: 64, gap: 32 },
+  iconStyle: { position: "absolute", top: 14, left: 12 },
+  eyeIcon: { position: "absolute", top: 12, left: 12 },
+  buttonWrapper: { marginTop: 32, gap: 32 },
   buttonLogin: {
     backgroundColor: "#6240AA",
     borderRadius: 10,
     paddingVertical: 12,
     height: 50,
     justifyContent: "center",
-    shadowColor: "#4D3385", // Slightly darker shade of #6240AA
-    shadowOffset: {
-      width: 0,
-      height: 4, // Depth of shadow
-    },
-    shadowOpacity: 0.2, // Subtle shadow effect
-    shadowRadius: 6, // Blurring effect
-    elevation: 6, // For Android
+    shadowColor: "#4D3385",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
   },
-  buttonText: {
-    color: "#ffffff",
-    textAlign: "center",
-  },
+  disabledButton: { backgroundColor: "#B9A7D6" },
+  buttonText: { color: "#ffffff", textAlign: "center" },
   actionsWrapper: {
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  rememberMeText: { color: "#A7A7A7" },
+  forgotPasswordLink: { color: "#6240AA" },
+  errorText: { color: "red", textAlign: "center", marginBottom: 10 },
+  registerText: {
+    fontFamily: "sf-bold",
+    color: "#A7A7A7",
+    textAlign: "center",
+  },
+  registerLink: { color: "#6240AA", textDecorationLine: "underline" },
 });
 
 export default LoginForm;

@@ -11,33 +11,23 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const signIn = () => {
+const SignIn = () => {
   const goBack = () => {};
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ paddingHorizontal: 24, paddingTop: 32 }}>
-        <TouchableOpacity
-          onPress={goBack}
-          style={{
-            position: "absolute",
-            backgroundColor: "#f5f1f9",
-            width: 40,
-            height: 40,
-            borderRadius: 100,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <ScrollView style={styles.scrollView}>
+        <TouchableOpacity onPress={goBack} style={styles.backButton}>
           <Image source={images.arrowBack} />
         </TouchableOpacity>
-        <Image
-          source={images.foodBasket}
-          style={{ alignSelf: "center", width: 150, height: 150 }}
-        />
-        <View style={styles.wrapHeader}>
+
+        <Image source={images.foodBasket} style={styles.logo} />
+
+        <View style={styles.headerWrapper}>
           <Text style={styles.header}>Login to your account</Text>
-          <Text style={styles.subheader}>Don't have an account? Register</Text>
+          <Text style={styles.subheader}>Enter your credentials to log in</Text>
         </View>
+
         <LoginForm />
       </ScrollView>
     </SafeAreaView>
@@ -46,21 +36,28 @@ const signIn = () => {
 
 const styles = StyleSheet.create({
   container: { backgroundColor: "#ffffff", height: "100%" },
-  logo: {},
-  wrapHeader: {},
+  scrollView: { paddingHorizontal: 24, paddingTop: 32 },
+  backButton: {
+    position: "absolute",
+    backgroundColor: "#f5f1f9",
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logo: { alignSelf: "center", width: 150, height: 150 },
+  headerWrapper: { marginVertical: 24 },
   header: {
     fontSize: 20,
     fontFamily: "sf-bold",
-    //color: "#6420AA",
     textAlign: "center",
-    marginVertical: 24,
   },
   subheader: {
-    //color: "#A7A7A7",
     fontFamily: "sf-regular",
     textAlign: "center",
     fontSize: 14,
   },
 });
 
-export default signIn;
+export default SignIn;
