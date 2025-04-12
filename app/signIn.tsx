@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     fontFamily: "sf-regular",
     textAlign: "center",
     fontSize: 14,
+    marginTop: 12,
   },
 });
 
