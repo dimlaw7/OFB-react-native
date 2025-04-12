@@ -37,31 +37,15 @@ const transactions = [
     amount: "+₦9,000.00",
     date: "May 10 2024",
   },
-  {
-    id: "6",
-    type: "Deposit",
-    status: "Approved",
-    amount: "+₦15,000.00",
-    date: "May 10 2024",
-  },
-  {
-    id: "7",
-    type: "Deposit",
-    status: "Approved",
-    amount: "+₦100.00",
-    date: "May 3 2024",
-  },
 ];
 
 const TransactionsComponent = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Recent Activites</Text>
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.transactionCard}>
+      <View style={styles.container}>
+        {transactions.map((item) => (
+          <View key={item.id} style={styles.transactionCard}>
             <View style={styles.transactionDetails}>
               <View style={styles.iconContainer}>
                 <Svg
@@ -88,8 +72,8 @@ const TransactionsComponent = () => {
               <Text style={styles.date}>{item.date}</Text>
             </View>
           </View>
-        )}
-      />
+        ))}
+      </View>
     </View>
   );
 };
