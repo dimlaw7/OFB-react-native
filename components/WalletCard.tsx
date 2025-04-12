@@ -7,46 +7,72 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator, // To show loading spinner
 } from "react-native";
+import useRadix from "@/services/useRadix";
+
+interface ApiResponse {
+  user: string;
+  firstName: string;
+  lastName: string;
+  wallet: string;
+  package_id: number;
+}
 
 const getUserBalance = async () => {
   const token = await AsyncStorage.getItem("token");
+
   if (!token) {
     throw new Error(
       "ERR-WALLET-CARD: User token not found. It appears that you are not log in."
     );
   }
+
   try {
     const response = await axios.post(
-      `http://192.168.0.100:3000/api/v1/user/details`,
+      `http://192.168.0.101:3000/api/v1/user/details`,
       { token }
     );
+
     if (response.data.status === "error") {
       throw new Error("ERR-WALLET-CARD: Error Retrieving user balance");
     }
+
     if (!response.data.data) {
       throw new Error("ERR-WALLET-CARD: Token is missing in the response");
     }
+
     return response.data.data;
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      if (err.message === "timeout exceeded") {
-        console.log(
-          "Timeout exceeded. Please check your internet connection and try again"
-        );
-        //return {message: "Timeout exceeded. Please check your internet connection and try again"}
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          // Server responded with a status code out of 2xx range
+          throw new Error(
+            error.response.data?.message || "Server error occurred."
+          );
+        } else if (error.request) {
+          // Request made but no response
+          throw new Error("No response from server. Check your network.");
+        } else {
+          // Something happened setting up the request
+          throw new Error("Unknown error occurred.");
+        }
       } else {
-        console.log("Error!", err.message);
+        throw new Error(error.message);
       }
     } else {
-      console.log("An unknown error occured!");
+      throw new Error(
+        "An unknown error occured!" +
+          (error instanceof Error ? error.message : error)
+      );
     }
     return null;
   }
 };
 
 const WalletCard = () => {
-  const { data, error } = useFetchData({ fn: getUserBalance });
+  const { data, error, loading } = useFetchData({ fn: getUserBalance });
   //console.log(!data ? "Loading data..." : data);
   return (
     <View style={styles.cardContainer}>
@@ -58,9 +84,15 @@ const WalletCard = () => {
           imageStyle={styles.backgroundImage}
         >
           <Text style={styles.title}>Wallet Balance</Text>
-          <Text style={styles.amount}>
-            {!data?.wallet ? "Loading..." : "₦" + data.wallet}
-          </Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            <Text style={styles.amount}>
+              {"₦" + (data?.wallet ? useRadix(data.wallet) : "N/A")}
+            </Text>
+          )}
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Deposit</Text>
           </TouchableOpacity>
@@ -87,7 +119,7 @@ const WalletCard = () => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#FFFFFF",
+    //backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#E0E0E0",
     borderRadius: 8,
@@ -99,7 +131,6 @@ const styles = StyleSheet.create({
     elevation: 6, // For Android
   },
   WalletCard: {
-    margin: 16,
     flexDirection: "column",
   },
   balance: {
@@ -123,6 +154,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginLeft: -4,
     overflow: "hidden",
+  },
+  errorText: {
+    fontSize: 14,
+    color: "red",
   },
   backgroundImage: {
     borderRadius: 8,
