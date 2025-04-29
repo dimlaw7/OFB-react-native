@@ -48,7 +48,7 @@ const getUserActivities = async () => {
 
   try {
     const { data } = await axios.get(
-      `http://192.168.0.102:3000/api/v1/user/transactions`
+      `${process.env.EXPO_PUBLIC_API_URL}/api/v1/user/transactions`
     );
 
     if (data.status === "error" || !data.data) {

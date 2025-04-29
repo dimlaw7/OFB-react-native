@@ -16,7 +16,7 @@ export default function useAuth() {
       setIsLoading(true);
 
       const response = await axios.post(
-        `http://192.168.0.102:3000/api/v1/user/login`,
+        `${process.env.EXPO_PUBLIC_API_URL}/api/v1/user/login`,
         {
           email,
           pass: password,
